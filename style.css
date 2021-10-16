@@ -1,0 +1,25 @@
+*, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+  }
+
+html {
+    font-size: 62.5%; 
+}
+
+body {
+    box-sizing: border-box;
+    padding: 3rem;
+    background-color: #DCDCDC;
+}
+
+.btn {
+    font-size: 1.5em;
+    margin: .1em;
+}
+
+.drawUI {
+    display: block;
+    /* width: 4em; */
+}
