@@ -12,6 +12,8 @@ let extraCanvas; //for drawing
 let brushSize = 3;
 let eraserSize = 3;
 
+let arrUnity = [];
+
 const canvasSize = 512;
 const threshold = 253;
 
@@ -26,11 +28,10 @@ function setup() {
 
     myCanvas.drop(gotFile);
     input = createFileInput(handleFile);
-
     extraCanvas.parent("canvas");
 	myCanvas.parent("canvas");
     input.parent("fileButton");
-
+    
     background(255);
 }
 
@@ -55,7 +56,7 @@ function handleFile(file){
 
 function draw() {
     background(255);
-    if (drawErase){
+    if (drawErase == true){
         if (mouseIsPressed) {
            drawStroke();
          }
@@ -75,14 +76,15 @@ function draw() {
 function clearCanvas(){
     extraCanvas.clear();
     // image(extraCanvas,0,0);
-    drawStat = true;
+    // drawStat = true;
 }
 
 function drawStroke(){
-    if (!drawStat) {
-        extraCanvas.clear();
-    }
+    // if (!drawStat) {
+        // extraCanvas.clear();
+    // }
     drawErase = true;
+
     extraCanvas.noErase();
     extraCanvas.stroke(0);
     extraCanvas.strokeWeight(brushSize);
@@ -91,9 +93,9 @@ function drawStroke(){
 }
 
 function eraseStroke(){
-    if (!drawStat) {
-        extraCanvas.clear();
-    }
+    // if (!drawStat) {
+        // extraCanvas.clear();
+    // }
     drawErase = false;
     extraCanvas.erase();
     extraCanvas.stroke(0);
@@ -106,18 +108,35 @@ function saveImage(){
     saveCanvas(extraCanvas, 'MD_draw', 'jpg');
 }
 
-function modifyImage(){
-    for (var y = 0; y < height; y++){
-        for (var x = 0; x < width; x++){
-            var index = (x + y * width)*4;
-        }
-    }
-    image(extraCanvas,0,0);
-    updatePixels();
-    console.log(extraCanvas.pixels[0]);
+//currently checks the image with html ID #oimg
+function isClosed(){
+    // let imageBase64String = extraCanvas.elt.toDataURL("image/png", 1.0);
+    // imgElement = document.querySelector('#oimg');
+    // oimg.src = imageBase64String;
+    let src = cv.imread('oimg');
+    let dst = cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC3);
+    cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
+    cv.threshold(src, src, 177, 200, cv.THRESH_BINARY);
+    let contours = new cv.MatVector();
+    let hierarchy = new cv.Mat();
+    cv.findContours(src, contours, hierarchy, cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE);
+    let cnt = contours.get(0);
+    let hier;
+    // console.log(contours.size());
+    for (let i = 0; i < contours.size(); ++i) {
+            hier = hierarchy.intPtr(0, i)
+            // console.log(hier);
+            if (hier[2] >= 2){
+            console.log("This stroke DOES contain closed contour.");
+                src.delete(); dst.delete(); contours.delete(); hierarchy.delete(); cnt.delete();
+                return true;
+            }
+    }  
+    console.log("This stroke does NOT contain closed contour.");
+        src.delete(); dst.delete(); contours.delete(); hierarchy.delete(); cnt.delete();
 }
 
-function cleanUp() {
+function createArray() {
     let imageBase64String = extraCanvas.elt.toDataURL("image/jpg", 1.0);    
     drawing = loadImage(imageBase64String, function done() {
         extraCanvas.clear();
@@ -137,23 +156,20 @@ function cleanUp() {
                     extraCanvas.pixels[index+1]= 0;
                     extraCanvas.pixels[index+2]= 0;
                     extraCanvas.pixels[index+3]= 255;
-                }
+                } 
+                arrUnity.push(extraCanvas.pixels[index]);
             }
         }
           extraCanvas.updatePixels();
-          saveImage();
-          drawStat = false;
-      });
-    
+        //   saveImage();
+        //   drawStat = false;
+      });  
 }
 
-// buttons
+//button
 clearButton.addEventListener("click", clearCanvas);
 // toggleButton.addEventListener("click", toggleImage);
 penButton.addEventListener("click", drawStroke);
 eraseButton.addEventListener("click", eraseStroke);
-cleanUpButton.addEventListener("click", cleanUp);
-
-
-
-
+arrayButton.addEventListener("click", createArray);
+submitButton.addEventListener("click", isClosed);
