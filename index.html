@@ -19,6 +19,7 @@
           <div id="drawingUI">
             <button type="button" id="penButton" class="drawUI btn btn-outline-secondary">Pen</button>
             <button type="button" id="eraseButton" class="drawUI btn btn-outline-secondary">Eraser</button>
+            <p id="msg">Draw the area of macular degeneration</p>
           </div>
        </div>
       <div class= "row" id="UI">
@@ -28,13 +29,15 @@
       <div class="row">
         <button type="button" id="clearButton" class=" btn btn-outline-secondary">Clear</button>
        <!-- <button type="button" id="toggleButton" class=" btn btn-outline-secondary">Toggle Image</button>       -->
-       <button type="button" id="arrayButton" class=" btn btn-outline-secondary">Create Array</button>
-       <button type="button" id="submitButton" class=" btn btn-outline-secondary">Stroke Test</button>
+       <button type="button" id="arrayButton" class=" btn btn-outline-secondary">Send</button>
+       <!-- <button type="button" id="submitButton" class=" btn btn-outline-secondary">Stroke Test</button> -->
       </div>
     </div>
-    <canvas id="myCanvas" width="200" height="200"></canvas>
-   <img src="MD_draw.jpg" id="oimg" width="512" height="512" style="visibility:hidden"> <!-- style="visibility:hidden" -->
-  
+    <canvas id="opencvCanvas" width="512" height="512" style="border:1px solid #000000;visibility: hidden;"></canvas>
+
+    <canvas id="myCanvas" width="512" height="512" style="border:1px solid #000000; visibility: hidden;"></canvas>
+    <canvas id="canvasOutput" width="512" height="512" style="border:1px solid #000000;visibility: hidden;"></canvas>
+
     <script src="sketch.js"></script>
   </body>
 </html>
