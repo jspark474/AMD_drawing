@@ -133,7 +133,8 @@ function isClosed(){
                 if (hier[2] >= 2){
                 // console.log("Ready to be sent!");
                     msg.innerHTML = "Ready to be sent";
-                    console.log(arrUnity);
+                    console.log(arrUnity.length);
+                    // saveStrings(arrUnity, 'pixelArray.txt');
                     // src.delete(); dst.delete(); contours.delete(); hierarchy.delete(); cnt.delete();
                     return true;
                 }
@@ -161,6 +162,7 @@ function clearPixels(){
 
 function createArray() {
     let imageBase64String = extraCanvas.elt.toDataURL("image/jpg", 1.0);    
+    arrUnity = [];
     drawing = loadImage(imageBase64String, function done() {
         // extraCanvas.clear();
         opencvCanvas.image(drawing, 0, 0, width, height); // draw the image
@@ -194,6 +196,7 @@ function createArray() {
       });  
       
 }
+
 
 //button
 clearButton.addEventListener("click", clearCanvas);
